@@ -1,0 +1,318 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ficus
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: login
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: course
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: min_students
+                  type: integer
+              - column:
+                  name: max_students
+                  type: integer
+              - column:
+                  name: duration
+                  type: numeric(2,1)
+              - column:
+                  name: lessons_count
+                  type: integer
+              - column:
+                  name: price
+                  type: numeric(7,2)
+
+        - createTable:
+            tableName: teacher
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(43)
+              - column:
+                  name: first_name
+                  type: varchar(40)
+              - column:
+                  name: middle_name
+                  type: varchar(40)
+              - column:
+                  name: phone
+                  type: varchar(11)
+              - column:
+                  name: user_id
+                  type: bigint
+
+        - createTable:
+            tableName: parent
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(43)
+              - column:
+                  name: first_name
+                  type: varchar(40)
+              - column:
+                  name: middle_name
+                  type: varchar(40)
+              - column:
+                  name: phone
+                  type: varchar(11)
+              - column:
+                  name: user_id
+                  type: bigint
+
+        - createTable:
+            tableName: student
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(43)
+              - column:
+                  name: first_name
+                  type: varchar(40)
+              - column:
+                  name: middle_name
+                  type: varchar(40)
+              - column:
+                  name: birth_date
+                  type: date
+              - column:
+                  name: parent_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: parent(id)
+                    foreignKeyName: fk_student_parent
+
+        - createTable:
+            tableName: lesson
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: time
+                  type: varchar(30)
+              - column:
+                  name: day
+                  type: varchar(20)
+
+        - createTable:
+            tableName: groups
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: course_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: course(id)
+                    foreignKeyName: fk_group_course
+
+        - createTable:
+            tableName: schedule
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: teacher_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: teacher(id)
+                    foreignKeyName: fk_schedule_teacher
+              - column:
+                  name: group_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: groups(id)
+                    foreignKeyName: fk_schedule_group
+              - column:
+                  name: lesson_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: lesson(id)
+                    foreignKeyName: fk_schedule_lesson
+
+        - createTable:
+            tableName: journal
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: schedule_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: schedule(id)
+                    foreignKeyName: fk_journal_schedule
+              - column:
+                  name: student_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: student(id)
+                    foreignKeyName: fk_journal_student
+              - column:
+                  name: score
+                  type: varchar(20)
+              - column:
+                  name: lesson_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attendance
+                  type: boolean
+
+        - createTable:
+            tableName: group_list
+            columns:
+              - column:
+                  name: group_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    references: groups(id)
+                    foreignKeyName: fk_group_list_group
+              - column:
+                  name: student_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    references: student(id)
+                    foreignKeyName: fk_group_list_student
+
+        - createTable:
+            tableName: teachers_courses
+            columns:
+              - column:
+                  name: teacher_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    references: teacher(id)
+                    foreignKeyName: fk_teachers_courses_teacher
+              - column:
+                  name: course_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    references: course(id)
+                    foreignKeyName: fk_teachers_courses_course
+
+  - changeSet:
+      id: 2
+      author: ficus
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: teacher
+            baseColumnNames: user_id
+            constraintName: fk_teacher_user
+            referencedTableName: users
+            referencedColumnNames: id
+            deferrable: false
+            initiallyDeferred: false
+
+        - addForeignKeyConstraint:
+            baseTableName: parent
+            baseColumnNames: user_id
+            constraintName: fk_parent_user
+            referencedTableName: users
+            referencedColumnNames: id
+            deferrable: false
+            initiallyDeferred: false
+
+#        - addForeignKeyConstraint:
+#            baseTableName: groups
+#            baseColumnNames: schedule_id
+#            constraintName: fk_group_schedule
+#            referencedTableName: schedule
+#            referencedColumnNames: id
+#            deferrable: false
+#            initiallyDeferred: false
+
