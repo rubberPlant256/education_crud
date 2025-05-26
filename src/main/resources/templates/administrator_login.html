@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Вход</title>
+  <style>
+    :root {
+        --primary: #8D2D9C;       /* Основной фиолетовый */
+        --secondary: #6C757D;     /* Серый для текста */
+        --light-purple: #E6D4F0;  /* Светло-фиолетовый фон */
+        --accent-purple: #A45BB1; /* Акцентный фиолетовый */
+        --white: #FFFFFF;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-purple); /* Светло-фиолетовый фон */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .login-group {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .login-container {
+        background-color: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .login-title {
+        color: var(--primary); /* Фиолетовый заголовок */
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .input-group {
+        margin-bottom: 25px;
+        width: 100%;
+    }
+
+    .input-elem {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .input-elem label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--secondary);
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .input-login,
+    .input-password,
+    .input-button {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .input-login:focus,
+    .input-password:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(141, 45, 156, 0.1); /* Фиолетовая тень при фокусе */
+    }
+
+    .button-group {
+        text-align: center;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .input-button {
+        background-color: var(--primary); /* Фиолетовая кнопка */
+        color: var(--white);
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .input-button:hover {
+        background-color: var(--accent-purple); /* Темнее при наведении */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .sign-in-link {
+        text-align: center;
+        color: var(--secondary);
+        font-size: 14px;
+    }
+
+    .sign-in-link a {
+        color: var(--primary); /* Фиолетовая ссылка */
+        text-decoration: none;
+        font-weight: 500;
+        margin-left: 5px;
+        transition: color 0.2s ease;
+    }
+
+    .sign-in-link a:hover {
+        color: var(--accent-purple); /* Темнее при наведении */
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<form th:action="@{/administrator/sign-in}" method="post" th:object="${userDTO}">
+  <div class="login-group">
+    <div class="login-container">
+      <h1 class="login-title">Вход</h1>
+
+      <div class="input-group">
+        <div class="input-elem">
+          <label>Логин</label>
+          <input type="text" class="input-login" name="login" th:field="*{login}" required>
+        </div>
+        <div class="input-elem">
+          <label>Пароль</label>
+          <input type="password" class="input-password" name="password" th:field="*{password}" required>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="input-button">Войти</button>
+      </div>
+
+    </div>
+  </div>
+</form>
+<!-- <script src=""></script> -->
+</body>
+</html>
