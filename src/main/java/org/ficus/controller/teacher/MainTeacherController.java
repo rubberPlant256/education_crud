@@ -3,7 +3,9 @@ package org.ficus.controller.teacher;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.ficus.auth.services.AuthService;
+import org.ficus.data.entity.Day;
 import org.ficus.data.entity.Teacher;
+import org.ficus.data.entity.Time;
 import org.ficus.dto.ScheduleDTO;
 import org.ficus.dto.TeacherDTO;
 import org.ficus.service.TeacherService;
@@ -30,7 +32,9 @@ public class MainTeacherController {
 
     @GetMapping("/main")
     public String showMainTeacherForm(HttpServletRequest request, Model model, @RequestHeader("Cookie") String cookie) {
-        model.addAttribute("request", request);
+    //    model.addAttribute("request", request);
+        model.addAttribute("dayTitles", Day.getDayTitles());
+        model.addAttribute("timeTitles", Time.getTimeTitles());
         Long userId = authService.getUserIdFromCookie(cookie);
         Teacher foundTeacher = teacherService.findTeacherByUserId(userId);
 
@@ -43,5 +47,11 @@ public class MainTeacherController {
 
        model.addAttribute("schedules", scheduleDTOs);
         return "teacher_main";
+    }
+
+    @GetMapping("/grades")
+    public String showJournalTeacherForm(){
+
+        return "test";
     }
 }
