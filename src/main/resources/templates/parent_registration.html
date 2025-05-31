@@ -132,7 +132,7 @@
     </style>
 </head>
 <body>
-<form th:action="@{/parent/sign-up}" method="post" th:object="${userDTO}" onsubmit="return validatePasswords()">
+<form th:action="@{/auth/parent/sign-up}" method="post" th:object="${userDTO}" onsubmit="return validatePasswords()">
     <!-- <script src="main.js"></script> -->
     <div class="registration-group">
         <h1 class="registration-title">Регистрация</h1>
@@ -160,7 +160,7 @@
 
         <div class="login-link">
             <span>Уже зарегестрированы?</span>
-            <a th:href="@{/parent/sign-in}">Войти</a>
+            <a th:href="@{/auth/parent/sign-in}">Войти</a>
         </div>
     </div>
 </form>

@@ -128,7 +128,7 @@
   </style>
 </head>
 <body>
-<form th:action="@{/parent/sign-in}" method="post" th:object="${userDTO}">
+<form th:action="@{/auth/parent/sign-in}" method="post" th:object="${userDTO}">
   <div class="login-group">
     <div class="login-container">
       <h1 class="login-title">Вход</h1>
@@ -150,7 +150,7 @@
 
       <div class="sign-in-link">
         <span>Не зарегестрированы?</span>
-        <a th:href="@{/parent/sign-up}">Регистрация</a>
+        <a th:href="@{/auth/parent/sign-up}">Регистрация</a>
       </div>
     </div>
   </div>

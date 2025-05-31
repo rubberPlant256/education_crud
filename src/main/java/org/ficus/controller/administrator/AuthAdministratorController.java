@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/administrator")
+@RequestMapping("/auth/administrator")
 public class AuthAdministratorController {
 
     private final AuthService authService;
@@ -31,7 +31,7 @@ public class AuthAdministratorController {
     @PostMapping("/sign-in")
     public String signIn(@ModelAttribute("userDTO") UserDTO userDTO, HttpServletResponse response){
         CustomResponse authResponse = authService.signIn(userDTO);
-        SessionCookieProvider.setUpStudentSessionCookie(response, authResponse.getCookieSessionId());
+        SessionCookieProvider.setUpAdministratorSessionCookie(response, authResponse.getCookieSessionId());
         return "redirect:/administrator/main";
     }
 }

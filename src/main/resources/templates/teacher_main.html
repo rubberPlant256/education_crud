@@ -53,10 +53,13 @@
         transition: all 0.3s;
         display: flex;
         align-items: center;
+        text-decoration: none;
+        color: white;
     }
 
     .menu-item:hover {
         background-color: var(--accent-purple);
+        text-decoration: none;
     }
 
     .menu-item.active {
@@ -173,12 +176,12 @@
     <h4>Меню преподавателя</h4>
   </div>
   <ul class="sidebar-menu">
-    <li class="menu-item active">
+    <a th:href="@{/teacher/schedule}" class="menu-item" th:classappend="${#request.getRequestURI().endsWith('/schedule')} ? 'active'">
       <i>📅</i> Расписание
-    </li>
-    <li class="menu-item">
+    </a>
+    <a th:href="@{/teacher/grades}" class="menu-item" th:classappend="${#request.getRequestURI().endsWith('/grades')} ? 'active'">
       <i>📝</i> Ведомость
-    </li>
+    </a>
   </ul>
 </div>
 
@@ -187,8 +190,8 @@
   <!-- Шапка профиля -->
   <div class="profile-header">
     <div class="profile-info">
-      <span class="profile-name">Иванова Мария Петровна</span>
-      <div class="profile-avatar">МП</div>
+      <span class="profile-name" th:text="${teacher.lastName + ' ' + teacher.firstName + ' ' + teacher.middleName}">ФИО преподавателя</span>
+      <div class="profile-avatar" th:text="${#strings.substring(teacher.firstName,0,1) + #strings.substring(teacher.lastName,0,1)}">ИП</div>
     </div>
   </div>
 
@@ -199,61 +202,24 @@
   <table class="schedule-table">
     <thead>
     <tr>
-      <th>Понедельник</th>
-      <th>Вторник</th>
-      <th>Среда</th>
-      <th>Четверг</th>
-      <th>Пятница</th>
-      <th>Суббота</th>
+      <th th:each="day : ${T(org.ficus.data.entity.Day).values()}"
+          th:text="${day.name()}">День недели</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-      <td>
-        <div class="lesson-card">
-          <div class="lesson-time">09:00-10:30</div>
-          <div>Математика</div>
-          <div class="lesson-group">1А класс</div>
-        </div>
-        <div class="lesson-card">
-          <div class="lesson-time">11:00-12:30</div>
-          <div>Математика</div>
-          <div class="lesson-group">1Б класс</div>
-        </div>
-      </td>
-      <td>
-        <div class="lesson-card">
-          <div class="lesson-time">10:00-11:30</div>
-          <div>Логика</div>
-          <div class="lesson-group">2А класс</div>
-        </div>
-      </td>
-      <td>
-        <div class="lesson-card">
-          <div class="lesson-time">09:00-10:30</div>
-          <div>Математика</div>
-          <div class="lesson-group">1А класс</div>
-        </div>
-      </td>
-      <td>
-        <div class="lesson-card">
-          <div class="lesson-time">14:00-15:30</div>
-          <div>Логика</div>
-          <div class="lesson-group">2Б класс</div>
-        </div>
-      </td>
-      <td>
-        <div class="lesson-card">
-          <div class="lesson-time">10:00-11:30</div>
-          <div>Математика</div>
-          <div class="lesson-group">1Б класс</div>
-        </div>
-      </td>
-      <td>
-        <div class="lesson-card">
-          <div class="lesson-time">09:00-12:30</div>
-          <div>Факультатив</div>
-          <div class="lesson-group">3А класс</div>
+      <td th:each="day : ${T(org.ficus.data.entity.Day).values()}">
+        <div th:each="schedule : ${schedules}"
+             th:if="${schedule.day == day}">
+          <div class="lesson-card">
+            <div class="lesson-time" th:text="${schedule.time.startTime + '-' + schedule.time.endTime}">
+              09:00-10:30
+            </div>
+            <div th:text="${schedule.group.course.name}">Математика</div>
+            <div class="lesson-group" th:text="${schedule.group.name}">
+              1А класс
+            </div>
+          </div>
         </div>
       </td>
     </tr>

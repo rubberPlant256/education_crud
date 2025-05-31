@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/parent")
+@RequestMapping("/auth/parent")
 public class AuthParentController {
 
     private final AuthService authService;
@@ -32,7 +32,7 @@ public class AuthParentController {
     @PostMapping("/sign-in")
     public String signIn(@ModelAttribute("userDTO") UserDTO userDTO, HttpServletResponse response){
         CustomResponse authResponse = authService.signIn(userDTO);
-        SessionCookieProvider.setUpStudentSessionCookie(response, authResponse.getCookieSessionId());
+        SessionCookieProvider.setUpParentSessionCookie(response, authResponse.getCookieSessionId());
         return "redirect:/parent/main";
     }
 
@@ -47,6 +47,6 @@ public class AuthParentController {
     @PostMapping("/sign-up")
     public String signUp(@ModelAttribute("userDTO") UserDTO userDTO){
         authService.signUp(userDTO, Role.PARENT);
-        return "redirect:/parent/sign-in";
+        return "redirect:/auth/parent/sign-in";
     }
 }
