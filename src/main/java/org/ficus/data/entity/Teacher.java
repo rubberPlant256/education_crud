@@ -35,7 +35,7 @@ public class Teacher {
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
     private List<Schedule> schedules;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package org.ficus.controller.teacher;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.ficus.auth.services.AuthService;
 import org.ficus.data.entity.Teacher;
@@ -28,7 +29,8 @@ public class MainTeacherController {
 
 
     @GetMapping("/main")
-    public String showMainTeacherForm(Model model, @RequestHeader("Cookie") String cookie) {
+    public String showMainTeacherForm(HttpServletRequest request, Model model, @RequestHeader("Cookie") String cookie) {
+        model.addAttribute("request", request);
         Long userId = authService.getUserIdFromCookie(cookie);
         Teacher foundTeacher = teacherService.findTeacherByUserId(userId);
 

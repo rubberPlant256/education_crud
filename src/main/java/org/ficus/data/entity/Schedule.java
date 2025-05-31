@@ -28,7 +28,7 @@ public class Schedule {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "groups_id")
+    @JoinColumn(name = "group_id")
     private Groups groups;
 
     @NotNull
@@ -36,6 +36,6 @@ public class Schedule {
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "schedule")
     private List<Journal> journals;
 }

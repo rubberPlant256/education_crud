@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ведомость - Преподаватель</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+        --primary: #8D2D9C;
+        --secondary: #6C757D;
+        --light-purple: #E6D4F0;
+        --accent-purple: #A45BB1;
+        --white: #FFFFFF;
+        --sidebar-width: 250px;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Боковая панель */
+    .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--primary);
+        color: white;
+        padding: 20px 0;
+        height: 100vh;
+        position: fixed;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .menu-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+    }
+
+    .menu-item:hover {
+        background-color: var(--accent-purple);
+        text-decoration: none;
+    }
+
+    .menu-item.active {
+        background-color: var(--accent-purple);
+        border-left: 4px solid white;
+    }
+
+    .menu-item i {
+        margin-right: 10px;
+    }
+
+    /* Основное содержание */
+    .main-content {
+        margin-left: var(--sidebar-width);
+        flex: 1;
+        padding: 20px;
+    }
+
+    /* Шапка профиля */
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        border-radius: 8px;
+    }
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-name {
+        margin-right: 15px;
+        font-weight: 500;
+    }
+
+    .profile-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--light-purple);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    .logout-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .logout-btn:hover {
+        background-color: var(--accent-purple);
+    }
+
+    /* Контент */
+    .content-title {
+        color: var(--primary);
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    /* Форма выбора группы и даты */
+    .selection-form {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: var(--primary);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .group-info {
+        background-color: var(--light-purple);
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    /* Таблица ведомости */
+    .grades-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .grades-table th {
+        background-color: var(--primary);
+        color: white;
+        padding: 15px;
+        text-align: left;
+    }
+
+    .grades-table td {
+        padding: 15px;
+        border: 1px solid #eee;
+        vertical-align: middle;
+    }
+
+    .grades-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .grades-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .attendance-select, .grade-select {
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .save-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-top: 20px;
+    }
+
+    .save-btn:hover {
+        background-color: var(--accent-purple);
+    }
+  </style>
+</head>
+<body>
+<!-- Боковая панель -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h4>Меню преподавателя</h4>
+  </div>
+  <ul class="sidebar-menu">
+    <a th:href="@{/teacher/schedule}" class="menu-item">
+      <i>📅</i> Расписание
+    </a>
+    <a th:href="@{/teacher/grades}" class="menu-item active">
+      <i>📝</i> Ведомость
+    </a>
+  </ul>
+</div>
+
+<!-- Основное содержание -->
+<div class="main-content">
+  <!-- Шапка профиля -->
+  <div class="profile-header">
+    <div class="profile-info">
+      <span class="profile-name" th:text="${teacherDTO.lastName + ' ' + teacherDTO.firstName + ' ' + teacherDTO.middleName}">ФИО преподавателя</span>
+      <div class="profile-avatar" th:text="${#strings.substring(teacherDTO.firstName,0,1) + #strings.substring(teacherDTO.lastName,0,1)}">ИП</div>
+    </div>
+    <button class="logout-btn">Выйти</button>
+  </div>
+
+  <!-- Заголовок -->
+  <h2 class="content-title">Ведомость группы</h2>
+
+  <!-- Форма выбора группы и даты -->
+  <div class="selection-form">
+    <div class="form-group">
+      <label class="form-label" for="group-select">Группа</label>
+      <select class="form-control" id="group-select">
+        <option value="">Выберите группу</option>
+        <option value="group1">1А</option>
+        <option value="group2">1Б</option>
+        <option value="group3">2А</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="date-select">Дата занятия</label>
+      <input type="date" class="form-control" id="date-select">
+    </div>
+
+    <div class="group-info" id="group-direction" style="display: none;">
+      Направление: <span id="direction-text">Программирование</span>
+    </div>
+  </div>
+
+  <!-- Таблица ведомости -->
+  <table class="grades-table">
+    <thead>
+    <tr>
+      <th>Ученик</th>
+      <th>Присутствие</th>
+      <th>Оценка</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Иванов Иван Иванович</td>
+      <td>
+        <select class="attendance-select">
+          <option value="present">Был</option>
+          <option value="absent">Не был</option>
+        </select>
+      </td>
+      <td>
+        <select class="grade-select">
+          <option value="">-</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Петров Петр Петрович</td>
+      <td>
+        <select class="attendance-select">
+          <option value="present">Был</option>
+          <option value="absent" selected>Не был</option>
+        </select>
+      </td>
+      <td>
+        <select class="grade-select">
+          <option value="">-</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Сидорова Анна Михайловна</td>
+      <td>
+        <select class="attendance-select">
+          <option value="present" selected>Был</option>
+          <option value="absent">Не был</option>
+        </select>
+      </td>
+      <td>
+        <select class="grade-select">
+          <option value="">-</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5" selected>5</option>
+        </select>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <button class="save-btn">Сохранить изменения</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Обработка выбора группы
+  document.getElementById('group-select').addEventListener('change', function() {
+    const groupDirection = document.getElementById('group-direction');
+    const directionText = document.getElementById('direction-text');
+
+    if (this.value) {
+      // Здесь можно добавить логику для определения направления по выбранной группе
+      const directions = {
+        'group1': 'Программирование',
+        'group2': 'Дизайн',
+        'group3': 'Маркетинг'
+      };
+
+      directionText.textContent = directions[this.value] || 'Не указано';
+      groupDirection.style.display = 'block';
+    } else {
+      groupDirection.style.display = 'none';
+    }
+  });
+
+  // Обработка кнопки выхода
+  document.querySelector('.logout-btn').addEventListener('click', function() {
+    // Логика выхода из системы
+    alert('Выход из системы');
+    // window.location.href = '/logout';
+  });
+
+  // Обработка кнопки сохранения
+  document.querySelector('.save-btn').addEventListener('click', function() {
+    // Логика сохранения изменений
+    alert('Изменения сохранены');
+  });
+</script>
+</body>
+</html>

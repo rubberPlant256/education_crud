@@ -35,7 +35,7 @@ public class Course {
 
     private BigDecimal price;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private List<Groups> groups;
 
     @ManyToMany(mappedBy = "courses")

@@ -38,6 +38,6 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     private List<Groups> groups;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "student")
     private List<Journal> journals;
 }

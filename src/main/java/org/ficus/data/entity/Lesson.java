@@ -26,6 +26,6 @@ public class Lesson {
     @Enumerated(value = EnumType.STRING)
     private Day day;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Journal> journals;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lesson")
+    private List<Schedule> schedules;
 }

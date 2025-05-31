@@ -28,7 +28,7 @@ public class Parent {
 
     private String phone;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
     private List<Student> students;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -176,10 +176,10 @@
     <h4>Меню преподавателя</h4>
   </div>
   <ul class="sidebar-menu">
-    <a th:href="@{/teacher/schedule}" class="menu-item" th:classappend="${#request.getRequestURI().endsWith('/schedule')} ? 'active'">
+    <a th:href="@{/teacher/schedule}" class="menu-item"> <!-- th:classappend="${#request.getRequestURI().endsWith('/schedule')} ? 'active'" -->
       <i>📅</i> Расписание
     </a>
-    <a th:href="@{/teacher/grades}" class="menu-item" th:classappend="${#request.getRequestURI().endsWith('/grades')} ? 'active'">
+    <a th:href="@{/teacher/grades}" class="menu-item" > <!-- th:classappend="${#request.getRequestURI().endsWith('/grades')} ? 'active'" -->
       <i>📝</i> Ведомость
     </a>
   </ul>
@@ -212,11 +212,11 @@
         <div th:each="schedule : ${schedules}"
              th:if="${schedule.day == day}">
           <div class="lesson-card">
-            <div class="lesson-time" th:text="${schedule.time.startTime + '-' + schedule.time.endTime}">
-              09:00-10:30
-            </div>
-            <div th:text="${schedule.group.course.name}">Математика</div>
-            <div class="lesson-group" th:text="${schedule.group.name}">
+<!--            <div class="lesson-time" th:text="${schedule.time.startTime + '-' + schedule.time.endTime}">-->
+<!--              09:00-10:30-->
+<!--            </div>-->
+            <div th:text="${schedule.group.course.id}">Математика</div>
+            <div class="lesson-group" th:text="${schedule.group.course.name}">
               1А класс
             </div>
           </div>

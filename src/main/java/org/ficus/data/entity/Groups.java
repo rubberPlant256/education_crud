@@ -26,7 +26,7 @@ public class Groups {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany (cascade = CascadeType.ALL)
+    @OneToMany (cascade = CascadeType.ALL, mappedBy = "groups")
     private List<Schedule> schedules;
 
     @ManyToMany
