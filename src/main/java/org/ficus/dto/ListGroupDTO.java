@@ -3,16 +3,13 @@ package org.ficus.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.ficus.data.entity.Course;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupDTO {
+public class ListGroupDTO {
 
-    private Long id;
-
-    private String course;
-
-
+    private List<GroupDTO> groupDTOList;
 }

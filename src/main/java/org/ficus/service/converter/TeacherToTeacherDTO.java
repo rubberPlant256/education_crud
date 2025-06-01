@@ -10,9 +10,9 @@ public class TeacherToTeacherDTO {
         teacherDTO.setLastName(teacher.getLastName());
         teacherDTO.setFirstName(teacher.getFirstName());
         teacherDTO.setMiddleName(teacher.getMiddleName());
-        teacherDTO.setPhone(teacher.getPhone());
-
-        teacherDTO.setTeachersCourses(teacher.getCourses());
+//        teacherDTO.setPhone(teacher.getPhone());
+//
+//        teacherDTO.setTeachersCourses(teacher.getCourses());
         return teacherDTO;
     }
 }

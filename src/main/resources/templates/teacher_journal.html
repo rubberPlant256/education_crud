@@ -81,7 +81,7 @@
     /* Шапка профиля */
     .profile-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         padding: 10px 20px;
         background-color: white;
@@ -222,6 +222,33 @@
     .save-btn:hover {
         background-color: var(--accent-purple);
     }
+
+    .load-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+    }
+
+    .load-btn:hover {
+        background-color: var(--accent-purple);
+    }
+
+    .placeholder {
+        text-align: center;
+        padding: 50px;
+        color: #666;
+        font-size: 18px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
@@ -234,7 +261,7 @@
     <a th:href="@{/teacher/schedule}" class="menu-item">
       <i>📅</i> Расписание
     </a>
-    <a th:href="@{/teacher/grades}" class="menu-item active">
+    <a class="menu-item active">
       <i>📝</i> Ведомость
     </a>
   </ul>
@@ -245,10 +272,9 @@
   <!-- Шапка профиля -->
   <div class="profile-header">
     <div class="profile-info">
-      <span class="profile-name" th:text="${teacherDTO.lastName + ' ' + teacherDTO.firstName + ' ' + teacherDTO.middleName}">ФИО преподавателя</span>
-      <div class="profile-avatar" th:text="${#strings.substring(teacherDTO.firstName,0,1) + #strings.substring(teacherDTO.lastName,0,1)}">ИП</div>
+      <span class="profile-name" th:text="${teacher.lastName + ' ' + teacher.firstName + ' ' + teacher.middleName}">ФИО преподавателя</span>
+      <div class="profile-avatar" th:text="${#strings.substring(teacher.firstName,0,1) + #strings.substring(teacher.lastName,0,1)}">ИП</div>
     </div>
-    <button class="logout-btn">Выйти</button>
   </div>
 
   <!-- Заголовок -->
@@ -256,92 +282,108 @@
 
   <!-- Форма выбора группы и даты -->
   <div class="selection-form">
-    <div class="form-group">
-      <label class="form-label" for="group-select">Группа</label>
-      <select class="form-control" id="group-select">
-        <option value="">Выберите группу</option>
-        <option value="group1">1А</option>
-        <option value="group2">1Б</option>
-        <option value="group3">2А</option>
-      </select>
-    </div>
+    <select class="form-control" id="group-select">
+      <option value="">Выберите группу</option>
+      <option th:each="group : ${groups}"
+              th:value="${group.id}"
+              th:text="${group.course + ' (номер: ' + group.id + ')'}">
+      </option>
+    </select>
+
 
     <div class="form-group">
       <label class="form-label" for="date-select">Дата занятия</label>
       <input type="date" class="form-control" id="date-select">
     </div>
-
-    <div class="group-info" id="group-direction" style="display: none;">
-      Направление: <span id="direction-text">Программирование</span>
+<!---->
+    <div>
+      <form th:action="@{/teacher/grades/students}" method="post">
+        <button class="load-btn" id="loadJournalBtn">Загрузить ведомость</button>
+      </form>
     </div>
+<!--    <button type="submit">Нажми меня</button>-->
+
+    <div class="lesson-time" id="lesson-time-info" style="display: none;">
+      Время занятия: <span id="time-text">14:00 - 15:30</span>
+    </div>
+
   </div>
 
-  <!-- Таблица ведомости -->
-  <table class="grades-table">
-    <thead>
-    <tr>
-      <th>Ученик</th>
-      <th>Присутствие</th>
-      <th>Оценка</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>Иванов Иван Иванович</td>
-      <td>
-        <select class="attendance-select">
-          <option value="present">Был</option>
-          <option value="absent">Не был</option>
-        </select>
-      </td>
-      <td>
-        <select class="grade-select">
-          <option value="">-</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td>Петров Петр Петрович</td>
-      <td>
-        <select class="attendance-select">
-          <option value="present">Был</option>
-          <option value="absent" selected>Не был</option>
-        </select>
-      </td>
-      <td>
-        <select class="grade-select">
-          <option value="">-</option>
-          <option value="3">3</option>
-          <option value="4" selected>4</option>
-          <option value="5">5</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td>Сидорова Анна Михайловна</td>
-      <td>
-        <select class="attendance-select">
-          <option value="present" selected>Был</option>
-          <option value="absent">Не был</option>
-        </select>
-      </td>
-      <td>
-        <select class="grade-select">
-          <option value="">-</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5" selected>5</option>
-        </select>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <!-- Плейсхолдер вместо таблицы -->
+  <div class="placeholder" id="placeholder">
+    Выберите группу и дату, затем нажмите "Загрузить ведомость"
+  </div>
 
-  <button class="save-btn">Сохранить изменения</button>
-</div>
+
+  <!-- Таблица ведомости (изначально скрыта) -->
+  <div id="journalTable" style="display: none;">
+    <table class="grades-table">
+      <thead>
+      <tr>
+        <th>Ученик</th>
+        <th>Присутствие</th>
+        <th>Оценка</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Иванов Иван Иванович</td>
+        <td>
+          <select class="attendance-select">
+            <option value="present">Был</option>
+            <option value="absent">Не был</option>
+          </select>
+        </td>
+        <td>
+          <select class="grade-select">
+            <option value="">-</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Петров Петр Петрович</td>
+        <td>
+          <select class="attendance-select">
+            <option value="present">Был</option>
+            <option value="absent" selected>Не был</option>
+          </select>
+        </td>
+        <td>
+          <select class="grade-select">
+            <option value="">-</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Сидорова Анна Михайловна</td>
+        <td>
+          <select class="attendance-select">
+            <option value="present" selected>Был</option>
+            <option value="absent">Не был</option>
+          </select>
+        </td>
+        <td>
+          <select class="grade-select">
+            <option value="">-</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+          </select>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <button class="save-btn">Сохранить изменения</button>
+  </div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -365,15 +407,26 @@
     }
   });
 
-  // Обработка кнопки выхода
-  document.querySelector('.logout-btn').addEventListener('click', function() {
-    // Логика выхода из системы
-    alert('Выход из системы');
-    // window.location.href = '/logout';
+  // Обработка кнопки загрузки ведомости
+  document.getElementById('loadJournalBtn').addEventListener('click', function() {
+    const group = document.getElementById('group-select').value;
+    const date = document.getElementById('date-select').value;
+
+    if (!group || !date) {
+      alert('Пожалуйста, выберите группу и дату');
+      return;
+    }
+
+    // Скрываем плейсхолдер и показываем таблицу
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('journalTable').style.display = 'block';
+
+    // Здесь должна быть логика загрузки данных (AJAX запрос)
+    // Пока просто показываем таблицу с тестовыми данными
   });
 
   // Обработка кнопки сохранения
-  document.querySelector('.save-btn').addEventListener('click', function() {
+  document.querySelector('.save-btn')?.addEventListener('click', function() {
     // Логика сохранения изменений
     alert('Изменения сохранены');
   });
