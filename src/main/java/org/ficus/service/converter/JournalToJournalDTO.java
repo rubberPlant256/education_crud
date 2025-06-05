@@ -19,6 +19,7 @@ public class JournalToJournalDTO {
         journalDTO.setStudent(journal.getStudent());
         journalDTO.setScore(journal.getScore());
         journalDTO.setAttendance(journal.isAttendance());
+        journalDTO.setLessonDate(journal.getLessonDate());
 
         return journalDTO;
     }

@@ -14,5 +14,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Long> {
             "WHERE s.teacher.id = :teacherId")
     List<Groups> findGroupsByTeacherId(@Param("teacherId") Long teacherId);
 
+    Groups findGroupsById(Long id);
+
 
 }

@@ -27,6 +27,7 @@ public class ParentService {
         parent.setFirstName(null);
         parent.setMiddleName(null);
         parent.setPhone(null);
+        parent.setUser(user);
 
         return save(parent);
     }

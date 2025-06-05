@@ -3,25 +3,25 @@ package org.ficus.controller.teacher;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.ficus.auth.services.AuthService;
-import org.ficus.data.entity.Day;
-import org.ficus.data.entity.Groups;
-import org.ficus.data.entity.Teacher;
-import org.ficus.data.entity.Time;
-import org.ficus.dto.GroupDTO;
-import org.ficus.dto.ScheduleDTO;
-import org.ficus.dto.TeacherDTO;
+import org.ficus.data.entity.*;
+import org.ficus.dto.*;
 import org.ficus.service.GroupsService;
 import org.ficus.service.JournalService;
 import org.ficus.service.TeacherService;
 import org.ficus.service.converter.GroupsToGroupsDTO;
+import org.ficus.service.converter.JournalToJournalDTO;
 import org.ficus.service.converter.ScheduleToScheduleDTO;
 import org.ficus.service.converter.TeacherToTeacherDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,7 +35,6 @@ public class MainTeacherController {
 
     @GetMapping("/main")
     public String showMainTeacherForm(Model model, @RequestHeader("Cookie") String cookie) {
-    //    model.addAttribute("request", request);
         model.addAttribute("dayTitles", Day.getDayTitles());
         model.addAttribute("timeTitles", Time.getTimeTitles());
         Long userId = authService.getUserIdFromCookie(cookie);
@@ -55,9 +54,6 @@ public class MainTeacherController {
     @GetMapping("/grades")
     public String showJournalTeacherForm(Model model, @RequestHeader("Cookie") String cookie){
 
-       // model.addAttribute("dayTitles", Day.getDayTitles());
-        model.addAttribute("timeTitles", Time.getTimeTitles());
-
         Long userId = authService.getUserIdFromCookie(cookie);
         Teacher foundTeacher = teacherService.findTeacherByUserId(userId);
         TeacherDTO teacherDTO = TeacherToTeacherDTO.convertTeacherToTeacherDTO(foundTeacher);
@@ -73,23 +69,120 @@ public class MainTeacherController {
             model.addAttribute("dateLesson", new Date());
         }
 
+        // model.addAttribute("GroupDateDTO", new GroupIdDateDTO());
         return "teacher_journal";
     }
 
-    @PostMapping("/grades/students")
-    public String showStudents(@ModelAttribute("groups") String filter, Model model, RedirectAttributes redirectAttributes){
+    @GetMapping("/grades/students")
+    public String showStudents(
+            @RequestParam("groupId") Long groupId,
+            @RequestParam("lessonDate") String lessonDate,
+            Model model,
+            RedirectAttributes redirectAttributes){
 
+        LocalDate localDate = LocalDate.parse(lessonDate);
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
+        List<Journal> journals = journalService.findJournalByGroupIdAndLessonDate(groupId, date);
+        List<JournalDTO> journalDTOS = journals.stream()
+                .map(JournalToJournalDTO::convertJournalToJournalDTO)
+                .collect(Collectors.toList());
+        Groups groups = groupsService.findGroupById(groupId);
+        List<Groups> groupsList = new ArrayList<>();
+        groupsList.add(groups);
+        List<GroupDTO> groupDTOList = GroupsToGroupsDTO.convertGroupListToGroupDTOList(groupsList);
 
-
-        findJournalByGroupIdAndLessonDate
-//        Set<ProjectDTO> projectDTOs = projectCatalogService.findProjectsBySubstring(filter);
-//        redirectAttributes.addFlashAttribute("projectsList", projectDTOs);
-//        redirectAttributes.addFlashAttribute("search", filter);
-//        return "redirect:/teacher/main";
-
-
+        redirectAttributes.addFlashAttribute("journalDTOS", journalDTOS);
+        redirectAttributes.addFlashAttribute("groups", groupDTOList);
+        redirectAttributes.addFlashAttribute("lessonDate", lessonDate);
 
         return "redirect:/teacher/grades";
     }
+
+//    @GetMapping("/grades/students")
+//    public String showStudents(
+//            @RequestParam("groupId") Long groupId,
+//            @RequestParam("lessonDate") String lessonDate,
+//            Model model) {
+//
+//        LocalDate localDate = LocalDate.parse(lessonDate);
+//        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//
+//        List<Journal> journals = journalService.findJournalByGroupIdAndLessonDate(groupId, date);
+//        List<JournalDTO> journalDTOS = journals.stream()
+//                .map(JournalToJournalDTO::convertJournalToJournalDTO)
+//                .collect(Collectors.toList());
+//
+//        Groups groups = groupsService.findGroupById(groupId);
+//        List<GroupDTO> groupDTOList = GroupsToGroupsDTO.convertGroupListToGroupDTOList(List.of(groups));
+//
+//        model.addAttribute("journalDTOS", journalDTOS);
+//        model.addAttribute("groups", groupDTOList);
+//        model.addAttribute("lessonDate", lessonDate);
+//
+//        return "redirect:/teacher/grades";
+//    }
+
+//    @GetMapping("/grades/students")
+//    public String showStudents(
+//            @RequestParam("groupId") Long groupId,
+//            @RequestParam("lessonDate") String lessonDate,
+//            Model model,
+//            RedirectAttributes redirectAttributes){
+//
+//        LocalDate localDate = LocalDate.parse(lessonDate);
+//        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//
+//        List<Journal> journals = journalService.findJournalByGroupIdAndLessonDate(groupId, date);
+//        List<JournalDTO> journalDTOS = journals.stream()
+//                .map(JournalToJournalDTO::convertJournalToJournalDTO)
+//                .collect(Collectors.toList());
+//
+//        Groups groups = groupsService.findGroupById(groupId);
+//        List<Groups> groupsList = new ArrayList<>();
+//        groupsList.add(groups);
+//        List<GroupDTO> groupDTOList = GroupsToGroupsDTO.convertGroupListToGroupDTOList(groupsList);
+//
+//        redirectAttributes.addFlashAttribute("journalDTOS", journalDTOS);
+//        redirectAttributes.addFlashAttribute("groups", groupDTOList);
+//        redirectAttributes.addFlashAttribute("lessonDate", lessonDate);
+//
+//        return "redirect:/teacher/grades";
+//    }
+
+    @PostMapping("/grades")
+    public ResponseEntity<?> updateTableJournal(@RequestBody List<JournalDTO> journalDTOS) {
+        for (JournalDTO journal : journalDTOS) {
+            journalService.updateJournalEntry(
+                    journal.getSchedule().getId(),
+                    journal.getStudent().getId(),
+                    journal.isAttendance(),
+                    journal.getScore());
+        }
+        return ResponseEntity.ok().body(Map.of("success", true));
+    }
+
+//    @PostMapping("/grades")
+//    public String updateTableJournal( @ModelAttribute("journalDTOS")  List<JournalDTO> journalDTOS){
+//        for (JournalDTO journal : journalDTOS){
+//            journalService.updateJournalEntry(
+//                    journal.getSchedule().getId(),
+//                    journal.getStudent().getId(),
+//                    journal.isAttendance(),
+//                    journal.getScore());
+//        }
+//        return "redirect:/teacher/grades";
+//    }
+
+//        @PostMapping("/update")
+//        public ResponseEntity<Void> updateJournalEntry(
+//                @RequestParam Long scheduleId,
+//                @RequestParam Long studentId,
+//                @RequestParam Boolean attendance,
+//                @RequestParam Score score) {
+//            journalService.updateJournalEntry(scheduleId, studentId, attendance, score);
+//            return ResponseEntity.ok().build();
+//        }
+
+
 }

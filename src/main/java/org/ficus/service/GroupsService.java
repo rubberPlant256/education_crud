@@ -19,5 +19,8 @@ public class GroupsService {
         return groupsRepository.findGroupsByTeacherId(teacherId);
     }
 
+    public Groups findGroupById(Long id){
+        return  groupsRepository.findGroupsById(id);
+    }
 
 }

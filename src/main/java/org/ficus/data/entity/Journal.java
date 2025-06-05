@@ -7,7 +7,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.util.Date;
+
+@NamedStoredProcedureQueries({
+        @NamedStoredProcedureQuery(
+                name = "Journal.updateJournalEntry",
+                procedureName = "update_journal_entries",
+                parameters = {
+                        @StoredProcedureParameter(name = "p_schedule_id", type = Long.class, mode = ParameterMode.IN),
+                        @StoredProcedureParameter(name = "p_student_id", type = Long.class, mode = ParameterMode.IN),
+                        @StoredProcedureParameter(name = "p_attendance", type = Boolean.class, mode = ParameterMode.IN),
+                        @StoredProcedureParameter(name = "p_grade", type = String.class, mode = ParameterMode.IN)
+                }
+        )
+})
+
+
+
 @Entity
 @Table(name = "journal")
 @Data
@@ -15,7 +32,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Journal {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
