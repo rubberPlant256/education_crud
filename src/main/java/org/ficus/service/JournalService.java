@@ -27,7 +27,8 @@ public class JournalService {
                 scheduleId,
                 studentId,
                 attendance,
-                score.name().toString()  // преобразуем enum в String
+                score != null ? score.name() : null
+               // score.name()  // преобразуем enum в String
         );
     }
 }

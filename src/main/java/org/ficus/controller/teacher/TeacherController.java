@@ -1,6 +1,5 @@
 package org.ficus.controller.teacher;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.ficus.auth.services.AuthService;
 import org.ficus.data.entity.*;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/teacher")
-public class MainTeacherController {
+public class TeacherController {
 
     private final TeacherService teacherService;
     private final AuthService authService;
@@ -98,57 +97,6 @@ public class MainTeacherController {
 
         return "redirect:/teacher/grades";
     }
-
-//    @GetMapping("/grades/students")
-//    public String showStudents(
-//            @RequestParam("groupId") Long groupId,
-//            @RequestParam("lessonDate") String lessonDate,
-//            Model model) {
-//
-//        LocalDate localDate = LocalDate.parse(lessonDate);
-//        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//
-//        List<Journal> journals = journalService.findJournalByGroupIdAndLessonDate(groupId, date);
-//        List<JournalDTO> journalDTOS = journals.stream()
-//                .map(JournalToJournalDTO::convertJournalToJournalDTO)
-//                .collect(Collectors.toList());
-//
-//        Groups groups = groupsService.findGroupById(groupId);
-//        List<GroupDTO> groupDTOList = GroupsToGroupsDTO.convertGroupListToGroupDTOList(List.of(groups));
-//
-//        model.addAttribute("journalDTOS", journalDTOS);
-//        model.addAttribute("groups", groupDTOList);
-//        model.addAttribute("lessonDate", lessonDate);
-//
-//        return "redirect:/teacher/grades";
-//    }
-
-//    @GetMapping("/grades/students")
-//    public String showStudents(
-//            @RequestParam("groupId") Long groupId,
-//            @RequestParam("lessonDate") String lessonDate,
-//            Model model,
-//            RedirectAttributes redirectAttributes){
-//
-//        LocalDate localDate = LocalDate.parse(lessonDate);
-//        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//
-//        List<Journal> journals = journalService.findJournalByGroupIdAndLessonDate(groupId, date);
-//        List<JournalDTO> journalDTOS = journals.stream()
-//                .map(JournalToJournalDTO::convertJournalToJournalDTO)
-//                .collect(Collectors.toList());
-//
-//        Groups groups = groupsService.findGroupById(groupId);
-//        List<Groups> groupsList = new ArrayList<>();
-//        groupsList.add(groups);
-//        List<GroupDTO> groupDTOList = GroupsToGroupsDTO.convertGroupListToGroupDTOList(groupsList);
-//
-//        redirectAttributes.addFlashAttribute("journalDTOS", journalDTOS);
-//        redirectAttributes.addFlashAttribute("groups", groupDTOList);
-//        redirectAttributes.addFlashAttribute("lessonDate", lessonDate);
-//
-//        return "redirect:/teacher/grades";
-//    }
 
     @PostMapping("/grades")
     public ResponseEntity<?> updateTableJournal(@RequestBody List<JournalDTO> journalDTOS) {

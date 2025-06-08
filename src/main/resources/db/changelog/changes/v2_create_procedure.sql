@@ -2,7 +2,7 @@
                   p_schedule_id BIGINT,
                   p_student_id BIGINT,
                   p_attendance BOOLEAN,
-                  p_grade VARCHAR
+                  p_score VARCHAR
                 ) RETURNS VOID AS $$
                   BEGIN
                     -- Проверяем существование записи в журнале
@@ -15,7 +15,7 @@
                       UPDATE journal
                       SET
                         attendance = p_attendance,
-                        grade = p_grade,
+                        score = p_score,
                         updated_at = NOW()
                       WHERE
                         schedule_id = p_schedule_id

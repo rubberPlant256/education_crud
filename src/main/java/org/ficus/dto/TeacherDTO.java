@@ -18,8 +18,9 @@ public class TeacherDTO {
     private String firstName;
 
     private String middleName;
+}
 
 //    private String phone;
 //
 //    private List<Course> teachersCourses;
-}
+//}
