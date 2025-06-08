@@ -109,28 +109,4 @@ public class TeacherController {
         }
         return ResponseEntity.ok().body(Map.of("success", true));
     }
-
-//    @PostMapping("/grades")
-//    public String updateTableJournal( @ModelAttribute("journalDTOS")  List<JournalDTO> journalDTOS){
-//        for (JournalDTO journal : journalDTOS){
-//            journalService.updateJournalEntry(
-//                    journal.getSchedule().getId(),
-//                    journal.getStudent().getId(),
-//                    journal.isAttendance(),
-//                    journal.getScore());
-//        }
-//        return "redirect:/teacher/grades";
-//    }
-
-//        @PostMapping("/update")
-//        public ResponseEntity<Void> updateJournalEntry(
-//                @RequestParam Long scheduleId,
-//                @RequestParam Long studentId,
-//                @RequestParam Boolean attendance,
-//                @RequestParam Score score) {
-//            journalService.updateJournalEntry(scheduleId, studentId, attendance, score);
-//            return ResponseEntity.ok().build();
-//        }
-
-
 }

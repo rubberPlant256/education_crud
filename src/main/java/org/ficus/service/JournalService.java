@@ -22,13 +22,11 @@ public class JournalService {
 
     public void updateJournalEntry(Long scheduleId, Long studentId,
                                    Boolean attendance, Score score) {
-        // Вызываем хранимую процедуру через репозиторий
         journalRepository.updateJournalEntry(
                 scheduleId,
                 studentId,
                 attendance,
                 score != null ? score.name() : null
-               // score.name()  // преобразуем enum в String
         );
     }
 }

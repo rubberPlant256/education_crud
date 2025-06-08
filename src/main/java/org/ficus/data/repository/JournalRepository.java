@@ -16,14 +16,6 @@ public interface JournalRepository extends JpaRepository<Journal, Long> {
     @Query("SELECT j FROM Journal j JOIN j.schedule s WHERE s.groups.id = :groupId AND j.lessonDate = :lessonDate")
     List<Journal> findByGroupIdAndLessonDate(@Param("groupId") Long groupId, @Param("lessonDate") Date lessonDate);
 
-    //@Procedure(procedureName = "update_journal_entries")
-//    @Procedure(value = "update_journal_entries")
-//    void updateJournalEntry(@Param("p_schedule_id") Long scheduleId,
-//                            @Param("p_student_id") Long studentId,
-//                            @Param("p_attendance") Boolean attendance,
-//                            @Param("p_grade") String score);
-
-
     @Query(value = "SELECT update_journal_entries(:p_schedule_id, :p_student_id, :p_attendance, :p_score)", nativeQuery = true)
     void updateJournalEntry(@Param("p_schedule_id") Long scheduleId,
                             @Param("p_student_id") Long studentId,

@@ -33,7 +33,7 @@ public class AuthParentController {
     public String signIn(@ModelAttribute("userDTO") UserDTO userDTO, HttpServletResponse response){
         CustomResponse authResponse = authService.signIn(userDTO);
         SessionCookieProvider.setUpParentSessionCookie(response, authResponse.getCookieSessionId());
-        return "redirect:/parent/main";
+        return "redirect:/parent/profile";
     }
 
     //показ формы регистрации
