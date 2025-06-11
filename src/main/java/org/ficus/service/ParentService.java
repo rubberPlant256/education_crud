@@ -3,12 +3,14 @@ package org.ficus.service;
 import lombok.RequiredArgsConstructor;
 import org.ficus.data.entity.Parent;
 import org.ficus.data.entity.Score;
+import org.ficus.data.entity.Student;
 import org.ficus.data.entity.Users;
 import org.ficus.data.repository.ParentRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
