@@ -23,5 +23,8 @@ public class StudentDTO {
 
     private String middleName;
 
+    private String birthDate;
+
+    private Long parentId;
 
 }

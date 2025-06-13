@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись на занятия</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8D2D9C;
+            --secondary: #6C757D;
+            --light-purple: #E6D4F0;
+            --accent-purple: #A45BB1;
+            --white: #FFFFFF;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .menu-item:hover {
+            background-color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        .menu-item.active {
+            background-color: var(--accent-purple);
+            border-left: 4px solid white;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+        }
+
+        /* Основное содержание */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* Шапка профиля */
+        .profile-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-name {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Контент */
+        .content-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Кнопка записи */
+        .btn-enroll {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .btn-enroll:hover {
+            background-color: var(--accent-purple);
+        }
+
+        /* Карточка формы */
+        .form-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        /* Стили для формы */
+        .form-label {
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(141, 45, 156, 0.25);
+        }
+
+        /* Модальное окно */
+        .modal-content {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .modal-header {
+            background-color: var(--primary);
+            color: white;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .modal-footer {
+            border-top: none;
+            justify-content: center;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+    </style>
+</head>
+<body>
+<!-- Боковая панель -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h4>Меню родителя</h4>
+    </div>
+    <ul class="sidebar-menu">
+        <a th:href="@{/parent/profile}" class="menu-item">
+            <i>👤</i> Профиль
+        </a>
+        <a th:href="@{/parent/children}" class="menu-item active">
+            <i>👶</i> Дети
+        </a>
+        <a th:href="@{/parent/grades}" class="menu-item">
+            <i>📊</i> Успеваемость
+        </a>
+    </ul>
+</div>
+
+<!-- Основное содержание -->
+<div class="main-content">
+    <!-- Шапка профиля -->
+    <div class="profile-header">
+        <div class="profile-info">
+<!--            <input type="hidden" th:field="*{parentId}" th:value="${parent.id}">-->
+<!--            <input type="hidden" name="parentId" th:value="${parent.id}">-->
+            <span class="profile-name" th:text="${parent.lastName + ' ' + parent.firstName + ' ' + parent.middleName}">ФИО родителя</span>
+            <div class="profile-avatar" th:text=" ${parent.firstName != null && parent.lastName != null ?
+                        #strings.substring(parent.firstName,0,1) + #strings.substring(parent.lastName,0,1) : 'N/A'}">ИП</div>
+        </div>
+    </div>
+
+    <!-- Заголовок -->
+    <h2 class="content-title">Запись ребенка на занятия</h2>
+
+    <!-- Форма записи -->
+    <div class="form-card">
+        <p>Для записи ребенка на занятия заполните следующую информацию:</p>
+<!--        <input type="hidden" name="parentId" th:value="${parent.id}">-->
+<!--        <input type="hidden" th:field="*{parentId}" th:value="${parent.id}">-->
+<!--        <input type="hidden" name="parentId" th:value="${parent.id}">-->
+
+        <form id="enrollmentForm" th:action="@{/parent/children/add}" th:object="${studentDTO}" method="post">
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Фамилия ребенка</label>
+                <input type="text" class="form-control" id="lastName"
+                       th:field="*{lastName}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Имя ребенка</label>
+                <input type="text" class="form-control" id="firstName"
+                       th:field="*{firstName}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="middleName" class="form-label">Отчество ребенка</label>
+                <input type="text" class="form-control" id="middleName"
+                       th:field="*{middleName}">
+            </div>
+
+            <div class="mb-3">
+                <label for="birthDate" class="form-label">Дата рождения</label>
+                <input type="date" class="form-control" id="birthDate"
+                       th:field="*{birthDate}" required>
+            </div>
+
+            <!-- Скрытое поле для parentId, если оно нужно -->
+<!--            <input type="hidden" th:field="*{parentId}" th:value="${parentId}">-->
+
+            <button type="submit" class="btn btn-enroll">Отправить заявку</button>
+        </form>
+    </div>
+
+<!-- Модальное окно подтверждения -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Заявка отправлена</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Администратор свяжется с вами в течение 1 рабочего дня (ежедневно с 9 до 18)</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-enroll" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!--<script>-->
+<!--    document.getElementById('enrollmentForm').addEventListener('submit', function(e) {-->
+<!--      e.preventDefault();-->
+
+<!--       fetch(this.action, {-->
+<!--        method: 'POST',-->
+<!--        body: new FormData(this),-->
+<!--        headers: {-->
+<!--            'X-CSRF-TOKEN': document.querySelector('[name="_csrf"]').value-->
+<!--        }-->
+<!--    })-->
+<!--    .then(response => {-->
+<!--        if (response.ok) {-->
+<!--            const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));-->
+<!--            modal.show();-->
+<!--            this.reset();-->
+<!--        }-->
+<!--    })-->
+<!--    .catch(error => console.error('Error:', error));-->
+<!--});-->
+<!--</script>-->
+</body>
+</html>

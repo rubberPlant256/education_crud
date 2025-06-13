@@ -212,6 +212,7 @@
   <!-- Шапка профиля -->
   <div class="profile-header">
     <div class="profile-info">
+      <input type="hidden" name="parentId" th:value="${parent.id}">
       <span class="profile-name" th:text="${parent.lastName + ' ' + parent.firstName + ' ' + parent.middleName}">ФИО родителя</span>
       <div class="profile-avatar" th:text=" ${parent.firstName != null && parent.lastName != null ?
                         #strings.substring(parent.firstName,0,1) + #strings.substring(parent.lastName,0,1) : 'N/A'}">ИП</div>
@@ -223,7 +224,8 @@
 
   <!-- Форма добавления ребенка -->
   <p class="mb-3">Для записи ребенка нажмите кнопку</p>
-  <form th:action="@{/parent/children/add}" method="post" class="d-inline">
+  <form method="GET" th:action="@{/parent/children/add}">
+<!--  <form th:action="@{/parent/children/add}" method="post" class="d-inline">-->
 <!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
     <button type="submit" class="btn btn-enroll">
       + Добавить ребенка
