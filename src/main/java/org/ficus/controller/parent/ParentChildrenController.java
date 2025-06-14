@@ -16,6 +16,7 @@ import org.ficus.service.converter.StudentToChildDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,8 @@ public class ParentChildrenController {
     }
 
     @GetMapping("/add")
-    public String showAddKid(Model model, @RequestHeader("Cookie") String cookie){
+    public String showAddKid(Model model, @RequestHeader("Cookie") String cookie,
+                             @RequestParam(name = "showModal", required = false) Boolean showModalParam){
         Long userId = authService.getUserIdFromCookie(cookie);
         Parent foundParent = parentService.findParentByUserId(userId);
         ParentDTO parentDTO = ParentToParentDTO.convertParentToParentDTO(foundParent);
@@ -56,20 +58,29 @@ public class ParentChildrenController {
         StudentDTO studentDTO = new StudentDTO();
         model.addAttribute("studentDTO", studentDTO);
 
+        // Проверяем и флеш-атрибут, и параметр URL
+        boolean showModal = showModalParam != null && showModalParam ||
+                model.containsAttribute("showModal");
+        model.addAttribute("showModal", showModal);
+
         return "parent_add_kid";
     }
 
     @PostMapping("/add")
     public String addKid(
             @RequestHeader("Cookie") String cookie,
-            @ModelAttribute("studentDTO")StudentDTO studentDTO){
+            @ModelAttribute("studentDTO")StudentDTO studentDTO,
+            RedirectAttributes redirectAttributes){
 
         Long userId = authService.getUserIdFromCookie(cookie);
         Parent foundParent = parentService.findParentByUserId(userId);
         studentDTO.setParentId(foundParent.getId());
         studentService.createStudentByStudentDTO(studentDTO);
 
-        return "redirect:/parent/children";
+        redirectAttributes.addFlashAttribute("showModal", true);
+
+        return "redirect:/parent/children?showModal=true";
+//        return "redirect:/parent/children";
     }
 
 

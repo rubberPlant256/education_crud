@@ -20,6 +20,10 @@ public class JournalService {
         return journalRepository.findByGroupIdAndLessonDate(groupId, lessonDate);
     }
 
+    public List<Journal> findJournalByStudentIdAndMonth(Long studentId, Date startDate, Date endDate){
+        return journalRepository.findByStudentIdAndDateRange(studentId, startDate, endDate);
+    }
+
     public void updateJournalEntry(Long scheduleId, Long studentId,
                                    Boolean attendance, Score score) {
         journalRepository.updateJournalEntry(

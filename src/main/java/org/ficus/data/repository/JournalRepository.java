@@ -21,4 +21,14 @@ public interface JournalRepository extends JpaRepository<Journal, Long> {
                             @Param("p_student_id") Long studentId,
                             @Param("p_attendance") Boolean attendance,
                             @Param("p_score") String score);
+
+    @Query("SELECT j FROM Journal j " +
+            "WHERE j.student.id = :studentId " +
+            "AND j.lessonDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY j.lessonDate")
+    List<Journal> findByStudentIdAndDateRange(
+            @Param("studentId") Long groupId,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate
+    );
 }
