@@ -1,6 +1,6 @@
 # Система организации дошкольного образования
 
-Стек технологий: Java 21, Spring Boot, Hibernate, liquibase, Thymeleaf
+Стек технологий: Java 21, Spring Boot, Hibernate, liquibase, PostgreSql, Thymeleaf
 
 Учебный проект, реализован в рамках курсовой работы.
 Полная система будет поддерживать следующие роли и функции:
