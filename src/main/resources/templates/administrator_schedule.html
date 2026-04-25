@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание - Администратор</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8D2D9C;
+            --secondary: #6C757D;
+            --light-purple: #E6D4F0;
+            --accent-purple: #A45BB1;
+            --white: #FFFFFF;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .menu-item:hover {
+            background-color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        .menu-item.active {
+            background-color: var(--accent-purple);
+            border-left: 4px solid white;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+        }
+
+        /* Основное содержание */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* Шапка профиля */
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .admin-title {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-name {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Контент */
+        .content-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Таблица расписания */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .schedule-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .schedule-table td {
+            padding: 15px;
+            border: 1px solid #eee;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .schedule-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .time-column {
+            background-color: var(--light-purple);
+            font-weight: 500;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .lesson-card {
+            background-color: var(--light-purple);
+            border-left: 4px solid var(--accent-purple);
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .lesson-time {
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .lesson-group {
+            font-size: 0.9em;
+        }
+
+        .action-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-purple {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-purple:hover {
+            background-color: var(--accent-purple);
+            color: white;
+        }
+
+        .btn-outline-purple {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline-purple:hover {
+            background-color: var(--light-purple);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Боковая панель -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h4>Меню администратора</h4>
+    </div>
+    <ul class="sidebar-menu">
+        <a class="menu-item active">
+            <i>📅</i> Расписание
+        </a>
+        <a class="menu-item">
+            <i>🎯</i> Направления
+        </a>
+        <a class="menu-item">
+            <i>👥</i> Группы
+        </a>
+        <a class="menu-item">
+            <i>👨‍🎓</i> Ученики
+        </a>
+    </ul>
+</div>
+
+<!-- Основное содержание -->
+<div class="main-content">
+    <!-- Шапка профиля -->
+    <div class="profile-header">
+        <div class="admin-title">Панель администратора</div>
+        <div class="profile-info">
+            <span class="profile-name">Администратор</span>
+            <div class="profile-avatar">АД</div>
+        </div>
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="action-buttons">
+        <button class="btn btn-purple" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+            Добавить группу
+        </button>
+    </div>
+
+    <!-- Заголовок -->
+    <h2 class="content-title">Расписание всех групп</h2>
+
+    <!-- Таблица расписания -->
+    <table class="schedule-table">
+        <thead>
+        <tr>
+            <th>Время</th>
+            <th th:each="entry : ${dayTitles.entrySet()}"
+                th:text="${entry.value}">День недели</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Группируем расписание по времени -->
+        <tr th:each="timeSlot : ${timeTitles.entrySet()}">
+            <td class="time-column" th:text="${timeSlot.value}">08:00-09:30</td>
+            <td th:each="entry : ${dayTitles.entrySet()}">
+                <div th:each="schedule : ${schedules}"
+                     th:if="${schedule.day.name() == entry.key and schedule.time.name() == timeSlot.key}">
+                    <div class="lesson-card">
+                        <button class="delete-btn" th:onclick="'deleteGroup(' + ${schedule.group.id} + ')'">✕</button>
+                        <div th:text="${schedule.group.id}">Название группы</div>
+                        <div class="lesson-group" th:text="${schedule.group.course.name}">
+                            Направление
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Модальное окно добавления группы -->
+<!--<div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="addGroupModalLabel">Добавить новую группу</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form id="addGroupForm">-->
+<!--                    <div class="mb-3">-->
+<!--                        <label for="groupName" class="form-label">Название группы</label>-->
+<!--                        <input type="text" class="form-control" id="groupName" required>-->
+<!--                    </div>-->
+<!--                    <div class="mb-3">-->
+<!--                        <label for="courseSelect" class="form-label">Направление</label>-->
+<!--                        <select class="form-select" id="courseSelect" required>-->
+<!--                            <option value="" selected disabled>Выберите направление</option>-->
+<!--                            <option th:each="course : ${courses}"-->
+<!--                                    th:value="${course.id}"-->
+<!--                                    th:text="${course.name}">Направление</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                    <div class="mb-3">-->
+<!--                        <label for="scheduleSelect" class="form-label">Расписание</label>-->
+<!--                        <select multiple class="form-select" id="scheduleSelect" required>-->
+<!--                            <option th:each="timeSlot : ${timeTitles.entrySet()}"-->
+<!--                                    th:each="day : ${dayTitles.entrySet()}"-->
+<!--                                    th:value="${day.key + '-' + timeSlot.key}"-->
+<!--                                    th:text="${day.value + ' ' + timeSlot.value}">-->
+<!--                                Понедельник 08:00-09:30-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <small class="text-muted">Выберите дни и время занятий (удерживайте Ctrl для выбора нескольких)</small>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>-->
+<!--                <button type="button" class="btn btn-purple" onclick="addGroup()">Добавить</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function deleteGroup(groupId) {
+      if (confirm('Вы уверены, что хотите удалить эту группу?')) {
+        // Здесь будет код для удаления группы
+        console.log('Удаление группы с ID:', groupId);
+        // Пример AJAX запроса:
+        // fetch('/api/groups/' + groupId, { method: 'DELETE' })
+        //   .then(response => location.reload())
+      }
+    }
+
+    function addGroup() {
+      const groupName = document.getElementById('groupName').value;
+      const courseId = document.getElementById('courseSelect').value;
+      const scheduleOptions = document.getElementById('scheduleSelect').selectedOptions;
+      const schedules = Array.from(scheduleOptions).map(opt => opt.value);
+
+      if (!groupName || !courseId || schedules.length === 0) {
+        alert('Пожалуйста, заполните все поля');
+        return;
+      }
+
+      // Здесь будет код для добавления группы
+      console.log('Добавление группы:', { groupName, courseId, schedules });
+      // Пример AJAX запроса:
+      /*
+      fetch('/api/groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: groupName, courseId, schedules })
+      }).then(response => location.reload())
+      */
+
+      // Закрываем модальное окно
+      bootstrap.Modal.getInstance(document.getElementById('addGroupModal')).hide();
+    }
+</script>
+</body>
+</html>
